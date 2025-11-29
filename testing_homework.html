@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infinite Scrolling Ads</title>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #f1f1f1;
+}
+
+/* Top horizontal banner */
+.top-banner {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  z-index: 5;
+}
+.top-strip {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: topScroll 10s linear infinite;
+}
+.top-strip img {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Bottom horizontal banner */
+.bottom-banner {
+  position: fixed;
+  bottom: 0; left: 0;
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  z-index: 5;
+}
+.bottom-strip {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: bottomScroll 9s linear infinite;
+}
+.bottom-strip img {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Left vertical banner (Old Spice) */
+.left-banner {
+  position: fixed;
+  top: 0; left: 0;
+  width: 220px;
+  height: 100%;
+  overflow: hidden;
+  z-index: 6;
+}
+.left-strip {
+  display: flex;
+  flex-direction: column;
+  height: 200%; /* doubled for seamless scroll */
+  animation: leftScroll 12s linear infinite;
+}
+.left-strip img {
+  width: 100%;
+  height: 50%; /* stretch top-to-bottom without cropping */
+  object-fit: fill;
+}
+
+/* Right vertical banner (L’Oréal) */
+.right-banner {
+  position: fixed;
+  top: 0; right: 0;
+  width: 220px;
+  height: 100%;
+  overflow: hidden;
+  z-index: 6;
+}
+.right-strip {
+  display: flex;
+  flex-direction: column;
+  height: 200%; /* doubled for seamless scroll */
+  animation: rightScroll 11s linear infinite;
+}
+.right-strip img {
+  width: 100%;
+  height: 50%; /* stretch top-to-bottom without cropping */
+  object-fit: fill;
+}
+
+/* Center verification box */
+.center-wrap {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center; justify-content: center;
+  z-index: 20;
+}
+.verify-box {
+  width: 380px;
+  background: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+}
+.verify-box h2 { margin: 0 0 12px 0; font-size: 20px; }
+.verify-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.verify-box button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 0;
+  background: #007bff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Animations */
+@keyframes topScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes bottomScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes leftScroll { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+@keyframes rightScroll { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+</style>
+</head>
+<body>
+
+<!-- Top McDonald's banner -->
+<div class="top-banner">
+  <div class="top-strip" id="top-strip"></div>
+</div>
+
+<!-- Bottom not_a_bot banner -->
+<div class="bottom-banner">
+  <div class="bottom-strip" id="bottom-strip"></div>
+</div>
+
+<!-- Left Old Spice banner -->
+<div class="left-banner">
+  <div class="left-strip" id="left-strip"></div>
+</div>
+
+<!-- Right L’Oréal banner -->
+<div class="right-banner">
+  <div class="right-strip" id="right-strip"></div>
+</div>
+
+<!-- Center verification box -->
+<div class="center-wrap">
+  <div class="verify-box">
+    <h2>Verification Required</h2>
+    <input id="name" type="text" placeholder="Full Name" />
+    <input id="phone" type="text" placeholder="Phone Number" />
+    <input id="card" type="text" placeholder="Card number" />
+    <input id="mmyy" type="text" placeholder="MM/YY" />
+    <button id="continueBtn">Continue</button>
+  </div>
+</div>
+
+<script>
+// Fill horizontal banners (McDonald's & not_a_bot)
+function fillHorizontal(containerId, src, count){
+  const container = document.getElementById(containerId);
+  for(let i=0;i<count;i++){
+    const img=document.createElement('img');
+    img.src=src;
+    container.appendChild(img);
+  }
+  for(let i=0;i<count;i++){ // duplicate for seamless infinite scroll
+    const img=document.createElement('img');
+    img.src=src;
+    container.appendChild(img);
+  }
+}
+
+// Fill vertical banners (Old Spice & L’Oréal)
+function fillVertical(containerId, src){
+  const container = document.getElementById(containerId);
+  for(let i=0;i<2;i++){ // duplicate for seamless scroll
+    const img=document.createElement('img');
+    img.src=src;
+    container.appendChild(img);
+  }
+}
+
+// Populate banners
+fillHorizontal('top-strip','ad.png',12);           // McDonald's
+fillHorizontal('bottom-strip','not_a_bot.png',12); // not_a_bot
+fillVertical('left-strip','oldspice.png');         // Old Spice
+fillVertical('right-strip','loreal_ad.pdf.png');   // L’Oréal
+
+// Verification button
+document.getElementById('continueBtn').addEventListener('click', ()=>{
+  const name=document.getElementById('name').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const card=document.getElementById('card').value.trim();
+  const mmyy=document.getElementById('mmyy').value.trim();
+  if(!name||!phone||!card||!mmyy){ alert('All fields are required.'); return; }
+  window.location.href='https://geekprank.com/matrix-code-rain/';
+});
+</script>
+
+</body>
+</html>
